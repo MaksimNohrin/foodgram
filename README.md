@@ -2,3 +2,17 @@
 
 По адресу http://localhost изучите фронтенд веб-приложения, а по адресу http://localhost/api/docs/ — спецификацию API.
 
+# Запуск локально
+### Бэкенд
+python manage.py data_import
+
+# Настройка окружения
+
+# API
+
+# Тестирование
+
+# Деплой
+
+# Временно, для разработки
+gunicorn -c develop/gunicorn.py backend.wsgi
