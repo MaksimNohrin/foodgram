@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*',]
 # Application definition
 
 INSTALLED_APPS = [
+    'user.apps.UserConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +41,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
-    'user',
     'recipe',
     'api',
 ]
@@ -80,6 +80,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB', 'django'),
@@ -89,7 +93,7 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT', 5432),
     }
 }
-
+# admin auth authtoken, contenttypes, sessions, user
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -154,9 +158,11 @@ DJOSER = {
     'SERIALIZERS': {
         'user_create': 'user.serializers.CustomUserCreateSerializer',
         'token_create': 'user.serializers.CustomTokenCreateSerializer',
-        # 'user': 'user.serializers.CustomUserSerializer',
+        'user': 'user.serializers.CustomUserSerializer',
+        'current_user': 'user.serializers.CustomUserSerializer',
     },
     'PERMISSIONS': {
-        'user_list': ['rest_framework.permissions.AllowAny'],
+        'user': ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
+        'user_list': ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
     },
 }

@@ -20,6 +20,10 @@ services:
       - LOGGING_LEVEL=DEBUG
     ports:
       - 8000:8000
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             gunicorn --access-logfile - --error-logfile - --capture-output --log-level debug --bind 0.0.0.0:8000 backend.wsgi"
     volumes:
       - static:/static/
       - media:/media/

@@ -6,4 +6,4 @@ User = get_user_model()
 
 @admin.register(User)
 class CustomUserModelAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'username',)

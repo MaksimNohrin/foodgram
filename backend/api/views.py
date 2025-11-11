@@ -3,6 +3,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
 
 from recipe.models import Recipe, Tag
+from .permissions import AuthorOrReadOnly
 from .serializers import RecipeSerializer, TagsSerializer
 
 
@@ -15,7 +16,7 @@ class CustomPagination(PageNumberPagination):
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.prefetch_related('ingredients')
     serializer_class = RecipeSerializer
-    # permission_classes
+    permission_classes = AuthorOrReadOnly
     pagination_class = CustomPagination
     filter_backends = [SearchFilter,]
     search_fields = ['name',]
