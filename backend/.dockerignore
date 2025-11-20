@@ -1,5 +1,5 @@
 venv
 env
 .git
-db.sqlite3
-__pycache__
+sqlite_db/db.sqlite3
+**/__pycache__

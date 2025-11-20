@@ -1,9 +1,13 @@
-from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.db import models
+
+from recipe.models import Recipe
 
 
 class CustomUser(AbstractUser):
+    """Реализация дополнительных полей модели пользователя."""
     username = models.CharField(
         'Имя пользователя',
         max_length=150,
@@ -24,17 +28,38 @@ class CustomUser(AbstractUser):
 
 class Subscription(models.Model):
     user = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE,
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
         verbose_name='Пользователь',
-        related_name='follows'
-    )
+        related_name='follows')
     follow = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE,
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
         verbose_name='Подписка',
-        related_name='followers'
-    )
+        related_name='followers')
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['user', 'follow'],
-                                    name='unique_subsctiption')]
+        unique_together = ('user', 'follow')
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        verbose_name='Пользователь')
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE,
+        verbose_name='Рецепт')
+
+    class Meta:
+        default_related_name = 'favorites'
+        unique_together = ('user', 'recipe')
+
+
+class ShoppingCart(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        verbose_name='Пользователь')
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE,
+        verbose_name='Рецепт')
+
+    class Meta:
+        default_related_name = 'shopping_cart'

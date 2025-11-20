@@ -11,7 +11,9 @@ User = get_user_model()
 
 
 class CustomUserViewSet(UserViewSet):
-    def authentication_check(self, request):
+    """Дополнительная логика работы с пользователями."""
+    def _authentication_check(self, request):
+        """Проверка авторизации пользователя."""
         if not request.user.is_authenticated:
             raise AuthenticationFailed(
                 {'detail': 'Не предоставлены учетные данные'}
@@ -21,7 +23,8 @@ class CustomUserViewSet(UserViewSet):
             url_path='me/avatar', url_name='me-avatar',
             detail=False)
     def me_avatar(self, request):
-        self.authentication_check(request)
+        """Доступ к аватару пользователя."""
+        self._authentication_check(request)
         user = request.user
 
         if request.method == "PUT":
@@ -44,5 +47,9 @@ class CustomUserViewSet(UserViewSet):
 
     @action(["get", "put", "patch", "delete"], detail=False)
     def me(self, request, *args, **kwargs):
-        self.authentication_check(request)
+        """
+        Дополнительная проверка на авторизацию пользователя перед
+        переходом на users/me/ .
+        """
+        self._authentication_check(request)
         return super().me(request, *args, **kwargs)
