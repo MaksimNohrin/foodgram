@@ -1,10 +1,111 @@
+from django.contrib.auth import get_user_model
+from djoser.serializers import (
+    TokenCreateSerializer, UserCreateSerializer, UserSerializer)
 from rest_framework import serializers
 
 from api.utils import Base64ImageField
 from api.constants import REQUERED_RECIPE_FIELDS
 from recipe.models import Ingredient, Recipe, RecipeIngredient, Tag
 from user.models import Favorite, ShoppingCart
-from user.serializers import CustomUserSerializer
+
+User = get_user_model()
+
+
+# --- СЕРИАЛИЗАТОРЫ ПОЛЬЗОВАТЕЛЕЙ ---
+
+class CustomUserSerializer(UserSerializer):
+    """Сериализатор пользователя с нужными для проекта полями."""
+    is_subscribed = serializers.SerializerMethodField()
+    avatar = Base64ImageField()
+
+    def get_is_subscribed(self, obj):
+        request = self.context.get('request')
+
+        if request.user.is_anonymous:
+            return False
+        return obj.follows.filter(user=request.user).exists()
+
+    class Meta:
+        model = User
+        fields = [
+            'email', 'id', 'username', 'first_name', 'last_name',
+            'is_subscribed', 'avatar',]
+
+
+class CustomUserCreateSerializer(UserCreateSerializer):
+    """Сериализатор пользователя с нужными полями."""
+    class Meta:
+        model = User
+        fields = [
+            'id', 'email', 'username', 'first_name', 'last_name', 'password',
+        ]
+
+
+class CustomTokenCreateSerializer(TokenCreateSerializer):
+    """Сериализатор для создания токена."""
+    email = serializers.EmailField()
+    username = serializers.CharField(read_only=True)
+
+    def validate(self, attrs):
+        """Поиск username по email."""
+        email = attrs.get('email')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            self.fail("invalid_credentials")
+
+        attrs['username'] = user.username
+
+        return super().validate(attrs)
+
+
+class AvatarSerializer(serializers.ModelSerializer):
+    """Сериализатор для просмотра аватара пользователя."""
+    avatar = Base64ImageField()
+
+    class Meta:
+        model = User
+        fields = ['avatar',]
+
+
+# --- СЕРИАЛИЗАТОРЫ РЕЦЕПТОВ ---
+
+class RecipeShortSerializer(serializers.ModelSerializer):
+    """Короткий вариант сериализатора рецептов."""
+    image = Base64ImageField()
+
+    class Meta:
+        model = Recipe
+        fields = ['id', 'name', 'image', 'cooking_time']
+
+
+class SubscriptionSerializer(CustomUserSerializer):
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+
+    def get_recipes(self, obj):
+        context = self.context
+        recipes = obj.recipes.all().order_by('-name')
+        recipes_limit = context.get('recipes_limit')
+
+        if recipes_limit is not None:
+            recipes = recipes[:recipes_limit]
+
+        return RecipeShortSerializer(
+            recipes,
+            many=True,
+            context=context
+        ).data
+
+    def get_recipes_count(self, obj):
+        return obj.recipes.count()
+
+    class Meta:
+        model = User
+        fields = [
+            'email', 'id', 'username', 'first_name', 'last_name',
+            'is_subscribed', 'recipes', 'recipes_count', 'avatar']
 
 
 class IngredientSerializer(serializers.ModelSerializer):

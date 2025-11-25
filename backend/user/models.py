@@ -30,11 +30,11 @@ class Subscription(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
         verbose_name='Пользователь',
-        related_name='follows')
+        related_name='followers')
     follow = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
         verbose_name='Подписка',
-        related_name='followers')
+        related_name='follows')
 
     class Meta:
         unique_together = ('user', 'follow')
@@ -63,3 +63,4 @@ class ShoppingCart(models.Model):
 
     class Meta:
         default_related_name = 'shopping_cart'
+        unique_together = ['user', 'recipe']

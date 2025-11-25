@@ -24,7 +24,7 @@ class NameBaseModel(models.Model):
 class Recipe(NameBaseModel):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-        verbose_name='Пользователь',)
+        verbose_name='Пользователь')
     image = models.ImageField(
         'Картинка',
         upload_to='recipe-images')
@@ -41,7 +41,7 @@ class Recipe(NameBaseModel):
         'Время приготовления')
 
     class Meta:
-        default_related_name = 'recipe'
+        default_related_name = 'recipes'
 
 
 class Ingredient(NameBaseModel):
@@ -62,6 +62,7 @@ class RecipeIngredient(models.Model):
 
     class Meta:
         default_related_name = 'recipe_ingredients'
+        unique_together = ['recipe', 'ingredient']
 
     # class Meta:
     #     constraints = [

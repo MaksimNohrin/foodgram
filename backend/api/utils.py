@@ -55,7 +55,8 @@ class RecipeFilterSet(django_filters.FilterSet):
         return None
 
     def _get_user_relations(self, queryset, value, query_field):
-        """Вспомогательная функция фильтрации, принимающая название поля."""
+        """Вспомогательная функция для фильтрации по названию поля модели
+        и пользователю."""
         user = self._get_user()
 
         if user and value:
@@ -73,6 +74,7 @@ class RecipeFilterSet(django_filters.FilterSet):
         return self._get_user_relations(queryset, value, 'shopping_cart__user')
 
     def filter_tags(self, queryset, name, value):
+        """Фильтрация по тэгам."""
         tags_list = self.request.query_params.getlist('tags')
 
         if not tags_list:
