@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,12 +20,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-u&&u(r6u*uzbi#^j)#&p1utpt-fxhkc507zqi7ym&!(%44sgfk'
+SECRET_KEY = os.getenv('SECRET_KEY', 'debug_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False if os.getenv('DEBUG') == 'False' else True
 
-ALLOWED_HOSTS = ['*',]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
 
 
 # Application definition
@@ -81,17 +83,13 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'sqlite_db/db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'django'),
+        'USER': os.getenv('POSTGRES_USER', 'django'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', 5432),
     }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': os.getenv('POSTGRES_DB', 'django'),
-    #     'USER': os.getenv('POSTGRES_USER', 'django'),
-    #     'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
-    #     'HOST': os.getenv('DB_HOST', ''),
-    #     'PORT': os.getenv('DB_PORT', 5432),
-    # }
 }
 
 # Password validation
@@ -137,14 +135,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/media'
-STATIC_ROOT = '/backend_static'
+STATIC_ROOT = BASE_DIR / 'backend_static'
 
 AUTH_USER_MODEL = 'user.CustomUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
@@ -155,6 +152,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'PAGE_SIZE_QUERY_PARAM': 'limit',
 }
+
 DJOSER = {
     'SERIALIZERS': {
         'user_create': 'api.serializers.CustomUserCreateSerializer',

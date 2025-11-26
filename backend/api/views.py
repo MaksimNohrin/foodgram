@@ -22,16 +22,11 @@ from user.models import Favorite, ShoppingCart, Subscription
 User = get_user_model()
 
 
+# --- ПРЕДСТАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯ ---
+
 class CustomUserViewSet(UserViewSet):
     """Представление пользователей."""
     pagination_class = LimitOffsetPagination
-
-    def _authentication_check(self, request):
-        """Проверка авторизации пользователя."""
-        if not request.user.is_authenticated:
-            raise AuthenticationFailed(
-                {'detail': 'Не предоставлены учетные данные'}
-            )
 
     def get_serializer_context(self):
         """Добавить значение recipes_limit в контекст."""
@@ -44,6 +39,23 @@ class CustomUserViewSet(UserViewSet):
                 context['recipes_limit'] = recipes_limit
 
         return context
+
+    def get_permissions(self):
+        """
+        Дополнительная проверка на авторизацию пользователя перед
+        переходом на users/me/ .
+        """
+        if (self.action == "me" and self.request.method == "GET"):
+            return [IsAuthenticated()]
+
+        return super().get_permissions()
+
+    def _authentication_check(self, request):
+        """Проверка авторизации пользователя."""
+        if not request.user.is_authenticated:
+            raise AuthenticationFailed(
+                {'detail': 'Не предоставлены учетные данные'}
+            )
 
     @action(methods=['put', 'delete'],
             url_path='me/avatar', url_name='me-avatar',
@@ -71,15 +83,6 @@ class CustomUserViewSet(UserViewSet):
             user.avatar = ''
             user.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
-
-    @action(["get", "put", "patch", "delete"], detail=False)
-    def me(self, request, *args, **kwargs):
-        """
-        Дополнительная проверка на авторизацию пользователя перед
-        переходом на users/me/ .
-        """
-        self._authentication_check(request)
-        return super().me(request, *args, **kwargs)
 
     @action(['post', 'delete'], detail=True)
     def subscribe(self, request, id):
@@ -117,7 +120,7 @@ class CustomUserViewSet(UserViewSet):
     def subscriptions(self, request):
         """action просмотра страницы подписок."""
         follows = User.objects.filter(
-            followers__user=request.user
+            follows__user=request.user
         ).order_by('id')
 
         # Подключение пагинации.
@@ -153,7 +156,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         """Эндпоинт для получения короткой ссылки на рецепт."""
         recipe = self.get_object()
         short_link_obj, _ = ShortLink.objects.get_or_create(recipe=recipe)
-        short_link_path = f'/s/{short_link_obj.short_code}'
+        short_link_path = f'/s/{short_link_obj.short_code}/'
         short_link_url = request.build_absolute_uri(short_link_path)
 
         return Response({'short-link': short_link_url})

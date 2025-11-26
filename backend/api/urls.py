@@ -16,7 +16,7 @@ router.register('ingredients', IngredientViewSet)
 urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
     path('', include(router.urls)),
-    path('s/<str:short_code>',
+    path('s/<str:short_code>/',
          short_link_redirect,
          name='short_link_redirect'),
 ]

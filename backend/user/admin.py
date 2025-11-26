@@ -9,6 +9,7 @@ User = get_user_model()
 @admin.register(User)
 class CustomUserModelAdmin(admin.ModelAdmin):
     list_display = ('id', 'username',)
+    search_fields = ('username', 'email',)
 
 
 @admin.register(Subscription)

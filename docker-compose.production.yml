@@ -12,24 +12,24 @@ services:
   backend:
     depends_on:
       - db
-    build: ./backend/
+    image: maksimnohrin/foodgram_backend:latest
     env_file: .env
     volumes:
       - static:/static/
       - media:/media/
   frontend:
     env_file: .env
-    build: ./frontend/
+    image: maksimnohrin/foodgram_frontend:latest
     command: cp -r /app/build/. /static/
     volumes:
       - static:/static
   gateway:
     depends_on:
       - backend
-    build: ./gateway/
+    image: maksimnohrin/foodgram_gateway:latest
     env_file: .env
     ports:
-      - 80:80
+      - 9001:80
     volumes:
       - static:/static
       - media:/media

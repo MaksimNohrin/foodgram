@@ -15,4 +15,8 @@ python manage.py data_import
 # Деплой
 
 # Временно, для разработки
-gunicorn -c develop/gunicorn.py backend.wsgi
+сделать дамп данных (в контейнере)
+docker container exec -it foodgram-backend-1 python manage.py dumpdata --natural-foreign --natural-primary --exclude contenttypes --exclude auth.permission --indent 2 > ./sqlite_db/data_dump.json
+
+загрузить данные из дампа
+docker container exec -it foodgram-backend-1 python manage.py loaddata ./sqlite_db/data_dump.json

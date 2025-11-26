@@ -10,6 +10,7 @@ from .constants import (CHAR_LENGTH, NAME_LENGTH, SHORT_CODE_GENERATE_ATTEMPTS,
 
 
 class NameBaseModel(models.Model):
+    """Абстрактная модель, содержащая имя."""
     name = models.CharField(
         'Название',
         max_length=CHAR_LENGTH)
@@ -22,9 +23,10 @@ class NameBaseModel(models.Model):
 
 
 class Recipe(NameBaseModel):
+    """Модель рецептов."""
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-        verbose_name='Пользователь')
+        verbose_name='Автор')
     image = models.ImageField(
         'Картинка',
         upload_to='recipe-images')
@@ -39,18 +41,25 @@ class Recipe(NameBaseModel):
         verbose_name='Тег')
     cooking_time = models.IntegerField(
         'Время приготовления')
+    pub_date = models.DateTimeField(
+        'Дата публикации',
+        auto_now_add=True,
+        null=True)
 
     class Meta:
         default_related_name = 'recipes'
+        ordering = ['-pub_date']
 
 
 class Ingredient(NameBaseModel):
+    """Модель ингредиентов."""
     measurement_unit = models.CharField(
         'Единица измерения',
         max_length=CHAR_LENGTH)
 
 
 class RecipeIngredient(models.Model):
+    """Промежуточная модель для сохранения ингредиентов в рецепте."""
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE,
         verbose_name='Рецепт')
@@ -64,14 +73,9 @@ class RecipeIngredient(models.Model):
         default_related_name = 'recipe_ingredients'
         unique_together = ['recipe', 'ingredient']
 
-    # class Meta:
-    #     constraints = [
-    #         models.UniqueConstraint(fields=['recipe', 'ingredient'],
-    #                                 name='unique_recipe_ingredient')
-    #     ]
-
 
 class Tag(NameBaseModel):
+    """Модель для тегов."""
     slug = models.SlugField(
         'Слаг',
         max_length=CHAR_LENGTH,
@@ -79,12 +83,14 @@ class Tag(NameBaseModel):
 
 
 class ShortLink(models.Model):
+    """Модель для коротких ссылок."""
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE)
     short_code = models.CharField(
         max_length=10, unique=True)
 
     def _generate_code(self, length):
+        """Функция для генерации случайного кода."""
         return ''.join(
             random.choice(string.ascii_letters + string.digits)
             for _ in range(length))
