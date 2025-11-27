@@ -152,7 +152,7 @@ jobs:
             echo "Применение миграций базы данных"
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
             echo "Сбор статики бэкенда"
-            sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+            sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --noinput
             sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/backend_static/. /static/static/
 
   send_message:
