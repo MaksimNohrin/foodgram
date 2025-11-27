@@ -18,7 +18,7 @@ Foodgram — это социальная платформа для любите�
 
 ## Демонстрация проекта
 Проект развернут и доступен для ознакомления по ссылке:
-[](https://foodgram-best.fun)
+[foodgram-best.fun](https://foodgram-best.fun)
 
 ## Локальное развертывание
 Для запуска проекта локально рекомендуется использовать Docker и Docker Compose.
@@ -47,9 +47,14 @@ docker-compose exec backend python manage.py migrate
 ```
 docker-compose exec backend python manage.py collectstatic --noinput
 ```
+```
+docker compose exec backend cp -r /app/backend_static/. /static/static/
+```
 
 * **Примените команду для загрузки данных ингредиентов:**  
-```docker-compose exec backend python manage.py data_import```
+```
+docker-compose exec backend python manage.py data_import
+```
 
 ## Доступ к приложению:
 Проект будет доступен в вашем браузере по адресу: `http://localhost` .
