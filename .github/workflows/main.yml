@@ -1,7 +1,8 @@
 name: Main Foodgram workflow
 
 on:
-  push:
+  # push:
+  workflow_dispatch:
 
 jobs:
   backend_tests:
@@ -77,12 +78,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           # Нужная версия Node.js
-          node-version: 18
+          node-version: 21
 
       - name: Install dependencies
         # Устанавливает зависимости для фронтенда
         run: |
           cd frontend/
+          npm install
           npm ci
 
       - name: Test frontend
