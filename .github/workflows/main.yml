@@ -1,8 +1,8 @@
 name: Main Foodgram workflow
 
 on:
-  push:
-  # workflow_dispatch:
+  # push:
+  workflow_dispatch:
 
 jobs:
   backend_tests:
@@ -84,8 +84,7 @@ jobs:
         # Устанавливает зависимости для фронтенда
         run: |
           cd frontend/
-          npm install
-          npm ci
+          npm ci --legacy-peer-deps
 
       - name: Test frontend
         run: |
