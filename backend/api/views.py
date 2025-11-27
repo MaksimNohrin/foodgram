@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
-from django_filters.rest_framework import DjangoFilterBackend
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
+from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
@@ -12,10 +12,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from api.permissions import AuthorOrReadOnly
-from api.serializers import (IngredientSerializer, RecipeSerializer,
-                             RecipeShortSerializer, TagsSerializer)
+from api.serializers import (
+    AvatarSerializer, IngredientSerializer, RecipeSerializer,
+    RecipeShortSerializer, SubscriptionSerializer, TagsSerializer,
+)
 from api.utils import IngredientFilterSet, RecipeFilterSet, RecipePagination
-from api.serializers import AvatarSerializer, SubscriptionSerializer
 from recipe.models import Ingredient, Recipe, ShortLink, Tag
 from user.models import Favorite, ShoppingCart, Subscription
 

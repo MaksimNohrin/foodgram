@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db.models import Count
 
-from recipe.models import ShortLink, Ingredient, Recipe, RecipeIngredient, Tag
+from recipe.models import Ingredient, Recipe, RecipeIngredient, ShortLink, Tag
 
 
 @admin.register(Recipe)

@@ -5,8 +5,9 @@ from django.conf import settings
 from django.db import models
 from django.db.utils import IntegrityError
 
-from .constants import (CHAR_LENGTH, NAME_LENGTH, SHORT_CODE_GENERATE_ATTEMPTS,
-                        SHORT_CODE_LENGTH)
+from .constants import (
+    CHAR_LENGTH, NAME_LENGTH, SHORT_CODE_GENERATE_ATTEMPTS, SHORT_CODE_LENGTH,
+)
 
 
 class NameBaseModel(models.Model):
