@@ -77,7 +77,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           # Нужная версия Node.js
-          node-version: 20
+          node-version: 18
 
       - name: Install dependencies
         # Устанавливает зависимости для фронтенда
