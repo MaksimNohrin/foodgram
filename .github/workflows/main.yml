@@ -84,7 +84,6 @@ jobs:
         # Устанавливает зависимости для фронтенда
         run: |
           cd frontend/
-          npm install
           npm ci --legacy-peer-deps
 
       - name: Test frontend
