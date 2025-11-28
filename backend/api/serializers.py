@@ -30,7 +30,7 @@ class CustomUserSerializer(UserSerializer):
         model = User
         fields = [
             'email', 'id', 'username', 'first_name', 'last_name',
-            'is_subscribed', 'avatar',]
+            'is_subscribed', 'avatar']
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
@@ -38,8 +38,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'email', 'username', 'first_name', 'last_name', 'password',
-        ]
+            'id', 'email', 'username', 'first_name', 'last_name', 'password']
 
 
 class CustomTokenCreateSerializer(TokenCreateSerializer):
@@ -67,7 +66,7 @@ class AvatarSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['avatar',]
+        fields = ['avatar']
 
 
 # --- СЕРИАЛИЗАТОРЫ РЕЦЕПТОВ ---

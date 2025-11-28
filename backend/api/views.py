@@ -241,9 +241,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         text.append('Список ингредиентов:\n')
 
         for ingredient in ingredients:
-            text.append(f'{ingredient['name'].capitalize()}: '
-                        f'{ingredient['total_amount']} '
-                        f'{ingredient['measurement_unit']}\n')
+            text.append(f'{ingredient["name"].capitalize()}: '
+                        f'{ingredient["total_amount"]} '
+                        f'{ingredient["measurement_unit"]}\n')
 
         response.writelines(text)
 
