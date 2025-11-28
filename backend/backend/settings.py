@@ -135,6 +135,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/media'
+STATIC_FILE_DIRS = [
+    BASE_DIR / 'docs',
+]
 STATIC_ROOT = BASE_DIR / 'backend_static'
 
 AUTH_USER_MODEL = 'user.CustomUser'
