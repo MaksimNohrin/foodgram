@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
         ('auth', '0012_alter_user_first_name_max_length'),
         ('authtoken', '0004_alter_tokenproxy_options'),
         ('recipe', '0014_alter_recipeingredient_options_and_more'),
-        ('user', '0005_alter_shoppingcart_unique_together.py'),
+        ('user', '0005_alter_shoppingcart_unique_together'),
     ]
 
     operations = [
