@@ -25,6 +25,9 @@ class CustomUser(AbstractUser):
         blank=True,
         null=True)
 
+    class Meta:
+        ordering = ['username']
+
 
 class Subscription(models.Model):
     user = models.ForeignKey(

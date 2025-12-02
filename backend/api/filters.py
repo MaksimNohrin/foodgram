@@ -1,32 +1,6 @@
-import base64
-import uuid
-
 import django_filters
-from django.core.files.base import ContentFile
-from rest_framework import serializers
-from rest_framework.pagination import PageNumberPagination
 
 from recipe.models import Recipe
-
-
-class Base64ImageField(serializers.ImageField):
-    """Поле для base64 картинок."""
-    def to_internal_value(self, data):
-        if isinstance(data, str) and data.startswith('data:image'):
-            format, imgstr = data.split(';base64,')
-            ext = format.split('/')[-1]
-
-            id = uuid.uuid4()
-            file_name = f'{id}.{ext}'
-            data = ContentFile(base64.b64decode(imgstr), name=file_name)
-
-        return super().to_internal_value(data)
-
-
-class RecipePagination(PageNumberPagination):
-    """Названия ключей пагинации."""
-    page_size_query_param = 'limit'
-    page_query_param = 'page'
 
 
 class IngredientFilterSet(django_filters.FilterSet):
