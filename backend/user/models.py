@@ -7,7 +7,7 @@ from recipe.models import Recipe
 from user.constants import MAX_LENGTH
 
 
-class CustomUser(AbstractUser):
+class User(AbstractUser):
     """Реализация дополнительных полей модели пользователя."""
     username = models.CharField(
         'Имя пользователя',
