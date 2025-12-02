@@ -2,7 +2,7 @@ from django.urls import include, path
 from rest_framework import routers
 
 from api.views import (
-    UserViewSet, IngredientViewSet, RecipeViewSet, TagViewSet,
+    IngredientViewSet, RecipeViewSet, TagViewSet, UserViewSet,
     short_link_redirect,
 )
 

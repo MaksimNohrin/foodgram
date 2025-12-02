@@ -17,7 +17,7 @@ from api.permissions import AuthorOrReadOnly
 from api.serializers import (
     AvatarSerializer, FavoriteWriteSerializer, IngredientSerializer,
     RecipeSerializer, RecipeShortSerializer, ShoppingCartWriteSerializer,
-    SubscriptionReadSerializer, SubscriptionWriteSerializer, TagsSerializer
+    SubscriptionReadSerializer, SubscriptionWriteSerializer, TagsSerializer,
 )
 from recipe.models import Ingredient, Recipe, ShortLink, Tag
 from user.models import Favorite, ShoppingCart, Subscription

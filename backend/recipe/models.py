@@ -40,7 +40,7 @@ class Recipe(NameBaseModel):
     tags = models.ManyToManyField(
         'Tag',
         verbose_name='Тег')
-    cooking_time = models.IntegerField(
+    cooking_time = models.PositiveIntegerField(
         'Время приготовления')
     pub_date = models.DateTimeField(
         'Дата публикации',
@@ -67,12 +67,14 @@ class RecipeIngredient(models.Model):
     ingredient = models.ForeignKey(
         Ingredient, on_delete=models.CASCADE,
         verbose_name='Ингредиент')
-    amount = models.IntegerField(
+    amount = models.PositiveIntegerField(
         'Количество')
 
     class Meta:
         default_related_name = 'recipe_ingredients'
         unique_together = ['recipe', 'ingredient']
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингрединенты'
 
 
 class Tag(NameBaseModel):

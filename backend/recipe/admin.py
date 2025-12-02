@@ -4,22 +4,31 @@ from django.db.models import Count
 from recipe.models import Ingredient, Recipe, RecipeIngredient, ShortLink, Tag
 
 
+class IngredientInline(admin.TabularInline):
+    model = RecipeIngredient
+    extra = 1
+
+    class Meta:
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
+
+
 @admin.register(Recipe)
 class RecipeModelAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'author__username', 'favorites_count',
                     'pub_date',)
     search_fields = ('name', 'author__first_name', 'author__last_name')
     list_filter = ('tags',)
+    inlines = [IngredientInline]
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
         return queryset.annotate(favorites_count=Count('favorites'))
 
+    @admin.display(description='Добавления в избранное',
+                   ordering='favorites_count')
     def favorites_count(self, obj):
         return obj.favorites_count
-
-    favorites_count.short_description = 'Добавления в избранное'
-    favorites_count.admin_order_field = 'favorites_count'
 
 
 @admin.register(Ingredient)
