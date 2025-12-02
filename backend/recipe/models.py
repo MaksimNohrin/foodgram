@@ -73,8 +73,6 @@ class RecipeIngredient(models.Model):
     class Meta:
         default_related_name = 'recipe_ingredients'
         unique_together = ['recipe', 'ingredient']
-        verbose_name = 'Ингредиент'
-        verbose_name_plural = 'Ингрединенты'
 
 
 class Tag(NameBaseModel):
